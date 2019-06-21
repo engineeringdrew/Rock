@@ -505,18 +505,15 @@ namespace RockWeb.Blocks.Administration
             foreach ( RepeaterItem rItem in rInteractions.Items )
             {
                 RockCheckBox isInterationTypeEnabled = rItem.FindControl( "cbInterationType" ) as RockCheckBox;
-                if ( isInterationTypeEnabled.Checked )
+                _reactivateSettings.Interactions = _reactivateSettings.Interactions ?? new List<InteractionItem>();
+                HiddenField interactionTypeId = rItem.FindControl( "hfInteractionTypeId" ) as HiddenField;
+                NumberBox lastInteractionDays = rItem.FindControl( "nbInteractionDays" ) as NumberBox;
+                var item = new InteractionItem( interactionTypeId.Value.AsGuid(), string.Empty )
                 {
-                    _reactivateSettings.Interactions = _reactivateSettings.Interactions ?? new List<InteractionItem>();
-                    HiddenField interactionTypeId = rItem.FindControl( "hfInteractionTypeId" ) as HiddenField;
-                    NumberBox lastInteractionDays = rItem.FindControl( "nbInteractionDays" ) as NumberBox;
-                    var item = new InteractionItem( interactionTypeId.Value.AsGuid(), string.Empty )
-                    {
-                        IsInteractionTypeEnabled = true,
-                        LastInteractionDays = lastInteractionDays.Text.AsInteger()
-                    };
-                    _reactivateSettings.Interactions.Add( item );
-                }
+                    IsInteractionTypeEnabled = isInterationTypeEnabled.Checked,
+                    LastInteractionDays = lastInteractionDays.Text.AsInteger()
+                };
+                _reactivateSettings.Interactions.Add( item );
             }
 
             // Inactivate
